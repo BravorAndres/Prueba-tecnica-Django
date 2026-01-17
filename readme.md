@@ -1,25 +1,67 @@
-1. Consumo de Datos (Backend)
+# Portal Analítico - Prueba Técnica
 
-Para integrar los resultados de BigQuery en Django, seguiría estos pasos:
+Este proyecto es una aplicación web básica construida con Django y Docker, diseñada para visualizar métricas de negocio simuladas. Incluye una arquitectura de contenedores para la aplicación y una base de datos PostgreSQL, junto con la resolución de ejercicios analíticos en SQL.
 
-    Integración Técnica: Utilizaría la librería oficial google-cloud-bigquery. Dado que los datos provienen de una base de datos analítica (OLAP) y no de una transaccional (OLTP), no usaría el ORM de Django directamente, sino un Service Layer o una utilidad de base de datos que ejecute los queries SQL y devuelva objetos de Python o Diccionarios.
+## Requisitos Previos
 
-    Seguridad y Credenciales: Las credenciales de acceso (Service Account JSON) y la SECRET_KEY de Django nunca se deben "hardcodear". Se gestionarían mediante variables de entorno (usando python-dotenv o Docker Secrets) para asegurar el entorno de producción.
+Asegúrate de tener instalados los siguientes componentes en tu sistema:
 
-    Optimización: Para evitar latencia en el frontend, implementaría un sistema de Caching (usando Redis o el sistema de caché en memoria de Django) para almacenar los resultados de los queries por un tiempo determinado, ya que los datos analíticos diarios no suelen cambiar cada segundo.
+- Docker
+- Docker Compose
 
-2. Seguridad y Acceso
+## Instalación y Despliegue
 
-    Autenticación: Implementaría el sistema robusto de Django Auth para restringir el acceso al portal. Solo usuarios con el permiso is_staff o pertenecientes a un grupo "Analistas" podrían visualizar los datos.
+Sigue estos pasos para levantar el entorno localmente:
 
-    Middleware: Utilizaría el decorador @login_required en las vistas o el mixin LoginRequiredMixin en vistas basadas en clases para asegurar que ningún endpoint sea público.
+1. **Clonar o descargar el repositorio**
 
-3. Presentación (Frontend)
+2. **Construir y levantar los contenedores**
+   
+   Desde la raíz del proyecto, ejecuta:
+   
+   ```bash
+   docker-compose up --build
+   ```
 
-La estrategia de visualización dependería de las necesidades del negocio:
+3. **Acceder a la aplicación**
+   
+   Una vez que los contenedores estén corriendo, abre tu navegador en:
+   
+   ```
+   http://localhost:8000
+   ```
 
-    Fase 1 (MVP - Tablas): Presentaría los datos mediante tablas dinámicas utilizando Django Templates y Bootstrap para que sea responsivo. Esto permite una lectura rápida y precisa de los valores exactos (como el Top 5 de clientes).
+## Estructura del Proyecto
 
-    Fase 2 (Visualización Avanzada): Para identificar tendencias (como ventas por mes), integraría una librería de JavaScript como Chart.js o ApexCharts.
+```
+.
+├── app/                      # Código fuente de Django (analytics_portal)
+│   └── dashboard/           # Aplicación del portal y visualización
+├── docker-compose.yml       # Definición de servicios (Web y Base de Datos)
+└── sql_queries.sql          # Solución al Bloque 2 (Consultas BigQuery)
+```
 
-        En lugar de enviar HTML renderizado, crearía un endpoint de API (usando Django Rest Framework) que devuelva los datos en formato JSON para alimentar las gráficas de forma asíncrona.
+## Descripción de Componentes
+
+- **`/app`**: Contiene el código fuente de Django (`analytics_portal`)
+- **`/app/dashboard`**: Aplicación encargada de la lógica del portal y la visualización
+- **`docker-compose.yml`**: Definición de los servicios (Web y Base de Datos)
+- **`sql_queries.sql`**: Solución al Bloque 2 (Consultas BigQuery)
+
+## Servicios Docker
+
+El proyecto utiliza los siguientes servicios:
+
+- **Web**: Aplicación Django
+- **Database**: PostgreSQL
+
+## Tecnologías Utilizadas
+
+- Django
+- PostgreSQL
+- Docker
+- Docker Compose
+
+---
+
+Desarrollado como prueba técnica
